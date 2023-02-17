@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "jsdoc -r -c jsdocconf.json && npx webpack",
-    "serve": "npx http-server dist",
+    "serve": "npx webpack serve",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
