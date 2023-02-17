@@ -7,13 +7,16 @@ import image3 from '../assets/500x500.PNG';
 import Worker from './index.worker.js';
 const worker = new Worker();
 
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("../sw.js");
+}
+
 import { getDocument } from 'pdfjs-dist';
 
 const pdfEditTxtBx = document.querySelector('#edit-text');
 const pdfUploadIpt = document.querySelector('#pdf-upload');
 const pdfReadBttn = document.querySelector('#pdf-read');
 
-const readAloudBttn = document.querySelector('#read-aloud');
 const playBttn = document.querySelector('#play');
 const pauseBttn = document.querySelector('#pause');
 const stopBttn = document.querySelector('#stop');
