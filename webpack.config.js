@@ -3,6 +3,8 @@ const env = require('dotenv').config();
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
+let hash = (new Date()).getTime();
+
 module.exports = {
   entry: {
     index: './src/javascript/index.js',
@@ -15,13 +17,20 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       filename: "css/[name].[contenthash].css",
-    }
-    ),
+    }),
   ],
   output: {
-    filename: 'javascript/[name].[contenthash].js',
+    filename: (pathData, assetInfo) => {
+      if (pathData.chunk.name === 'index') {
+        if (!hash) hash = pathData.chunk.contentHash.javascript;
+        console.log(pathData.chunk.contentHash.javascript);
+        return `javascript/[name].${hash}.js`
+      } 
+      return 'javascript/[name].[contenthash].js'
+    },
     path: path.resolve(__dirname, 'dist'),
     clean: true,
+    publicPath: '/',
   },
   optimization: {
     runtimeChunk: 'single',
@@ -41,20 +50,45 @@ module.exports = {
       {
         test: /\.css$/i,
         use: [MiniCssExtractPlugin.loader, 'css-loader'],
-      }
-    ]
+      },
+      {
+        test: /\.worker\.js$/,
+        type: 'javascript/auto',
+        loader: 'worker-loader',
+        enforce: 'post',
+        options: {
+          filename: (pathData) => {
+            if (hash) return `javascript/index.${hash}.worker.js`;
+            else {
+              hash = pathData.chunk.contentHash.javascript;
+              return 'javascript/index.[contenthash].worker.js'
+            }
+          }
+        }
+      },
+    ],
   },
   resolve: {
     fallback: {
-      "zlib": require.resolve('browserify-zlib'),
-      "assert": require.resolve('assert/'),
-      "buffer": require.resolve('buffer/'),
-      "stream": require.resolve("stream-browserify"),
-      "util": require.resolve('util/'),
-      "http": require.resolve('stream-http'),
-      "https": require.resolve('https-browserify'),
+      // "zlib": require.resolve('browserify-zlib'),
+      // "assert": require.resolve('assert/'),
+      // "buffer": require.resolve('buffer/'),
+      // "stream": require.resolve("stream-browserify"),
+      // "util": require.resolve('util/'),
+      // "http": require.resolve('stream-http'),
+      // "https": require.resolve('https-browserify'),
       "fs": require.resolve('fs-web'),
-      "url": require.resolve('URL'),
+      // "url": require.resolve('URL'),
+    }
+  },
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'dist'),
+    },
+    compress: true,
+    port: 8080,
+    headers: {
+      //"Content-Type": "application/javascript",
     }
   }
 };

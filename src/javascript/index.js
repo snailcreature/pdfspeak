@@ -1,8 +1,11 @@
 import '../css/index.css';
 
+import Worker from './index.worker.js';
+const worker = new Worker();
+
 import fs from 'fs';
-import PDFJS from 'pdfjs-dist';
 import { parse } from 'path';
+import { getDocument } from 'pdfjs-dist';
 
 console.log("Hello, World!");
 
@@ -14,14 +17,28 @@ console.log("Hello, World!");
 // });
 
 const pdfTextP = document.querySelector('#pdf-text');
+const pdfUploadIpt = document.querySelector('#pdf-upload');
+const pdfReadBttn = document.querySelector('#pdf-read');
+console.log('make a change');
 
-PDFJS.getDocument('./PCODE_UP882151.pdf').then((pdf) => {
-  for (let i = 1; i <= pdf.numPages; i++) {
-    pdf.getPage(i).then((page) => {
-      page.getTextContent().then((textContent) => {
-        pdfTextP.innerHTML += textContent
+pdfReadBttn.addEventListener('click', () => {
+  let file;
+  if (pdfUploadIpt.files.length > 0) {
+    file = pdfUploadIpt.files[0];
+    let loadingTask = getDocument(URL.createObjectURL(file));
+    loadingTask.promise.then((pdf) => {
+      console.log('loaded');
+      pdf.getPage(1).then((page) => {
+        page.getTextContent().then((text) => {
+          console.log(text);
+          text.items.forEach((item) => {
+            if (item.str) pdfTextP.textContent += item.str + ' ';
+          })
+        });
       });
-    });
+    })
+  } else {
+    console.log('No file');
   }
 });
 
