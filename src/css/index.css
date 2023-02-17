@@ -1,3 +1,29 @@
 * {
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
+
+#edit-text {
+  max-width: 80em;
+  max-height: 80vh;
+  resize: none;
+}
+
+#controls {
+  max-width: 80em;
+}
+
+input[type=button] {
+
+}
+
+@media screen and (max-width: 80em) {
+  #edit-text {
+    max-width: 90vw;
+    max-height: 80vh;
+    resize: none;
+  }
+
+  #controls {
+    max-width: 90vw;
+  }
+}

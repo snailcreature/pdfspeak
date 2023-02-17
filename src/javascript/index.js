@@ -51,13 +51,9 @@ pdfReadBttn.addEventListener('click', () => {
   }
 });
 
-readAloudBttn.addEventListener('click', () => {
-  let utterance = new SpeechSynthesisUtterance(pdfEditTxtBx.value);
-  speechSynthesis.speak(utterance);
-});
-
 playBttn.addEventListener('click', () => {
   if (speechSynthesis.paused) speechSynthesis.resume();
+  else speechSynthesis.speak(new SpeechSynthesisUtterance(pdfEditTxtBx.value));
 });
 
 pauseBttn.addEventListener('click', () => {
