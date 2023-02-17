@@ -8,8 +8,11 @@ import { getDocument } from 'pdfjs-dist';
 const pdfEditTxtBx = document.querySelector('#edit-text');
 const pdfUploadIpt = document.querySelector('#pdf-upload');
 const pdfReadBttn = document.querySelector('#pdf-read');
-const readAloudBttn = document.querySelector('#read-aloud');
 
+const readAloudBttn = document.querySelector('#read-aloud');
+const playBttn = document.querySelector('#play');
+const pauseBttn = document.querySelector('#pause');
+const stopBttn = document.querySelector('#stop');
 
 pdfReadBttn.addEventListener('click', () => {
   let file;
@@ -51,6 +54,18 @@ pdfReadBttn.addEventListener('click', () => {
 readAloudBttn.addEventListener('click', () => {
   let utterance = new SpeechSynthesisUtterance(pdfEditTxtBx.value);
   speechSynthesis.speak(utterance);
+});
+
+playBttn.addEventListener('click', () => {
+  if (speechSynthesis.paused) speechSynthesis.resume();
+});
+
+pauseBttn.addEventListener('click', () => {
+  if (speechSynthesis.speaking) speechSynthesis.pause();
+});
+
+stopBttn.addEventListener('click', () => {
+  speechSynthesis.cancel();
 });
 
 let utterance = new SpeechSynthesisUtterance("Upload a PDF to begin.");
