@@ -5,6 +5,21 @@
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
+input[type=file] {
+  max-width: 40em;
+  height: 5vh;
+  border-color: black;
+  border: .1em;
+  border-style: solid;
+  border-radius: .2em;
+  cursor: pointer;
+}
+
+input[type=button] {
+  cursor: pointer;
+  height: 2em;
+}
+
 #edit-text {
   max-width: 80em;
   max-height: 80vh;
@@ -15,23 +30,29 @@
   max-width: 80em;
 }
 
-#controls {
-  max-width: 80em;
-}
-
 #play, #pause, #stop {
-  width: auto;
+  width: 20em;
   height: 2em;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 80em) {
+  body {
+    align-content: center;
+  }
+
   #edit-text {
     max-width: 90vw;
     max-height: 80vh;
     resize: none;
   }
 
-  #controls {
-    max-width: 90vw;
+  #pdf-read {;
+    min-width: 90vw;
+  }
+
+  #play, #pause, #stop {
+    width: 30vw;
+    cursor: pointer;
   }
 }
