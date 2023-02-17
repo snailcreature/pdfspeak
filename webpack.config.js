@@ -2,7 +2,6 @@ const path = require('path');
 const env = require('dotenv').config();
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 let hash = (new Date()).getTime();
@@ -73,6 +72,14 @@ module.exports = {
           }
         }
       },
+      {
+        test: /\.PNG$/,
+        type: 'asset/resource',
+        loader: 'file-loader',
+        options: {
+          name: 'assets/[name].[ext]',
+        },
+      }
     ],
   },
   resolve: {

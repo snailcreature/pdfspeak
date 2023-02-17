@@ -5,5 +5,19 @@
   "display": "standalone",
   "background_color": "#fff",
   "description": "A readable Hacker News app.",
-  "scope": "/"
+  "scope": "/",
+  "icons": [
+    {
+      "purpose": "maskable",
+      "src": "./assets/500x500.PNG",
+      "type": "image/png",
+      "sizes": "500x500"
+  },
+  {
+      "purpose": "any maskable",
+      "src": "./assets/128x128.PNG",
+      "type": "image/png",
+      "sizes": "128x128"
+  }
+  ]
 }

@@ -1,5 +1,5 @@
 {
-  "name": "webpack-boilerplate",
+  "name": "pdfspeak",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,17 +10,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/snailcreature/webpack-boilerplate.git"
+    "url": "git+https://github.com/snailcreature/pdfspeak.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/snailcreature/webpack-boilerplate/issues"
+    "url": "https://github.com/snailcreature/pdfspeak/issues"
   },
-  "homepage": "https://github.com/snailcreature/webpack-boilerplate#readme",
+  "homepage": "https://github.com/snailcreature/pdfspeak#readme",
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",
+    "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.6.0",
     "style-loader": "^3.3.1",

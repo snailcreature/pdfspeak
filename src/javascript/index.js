@@ -1,5 +1,9 @@
 import '../css/index.css';
 
+import image1 from '../assets/128x128.PNG';
+import image2 from '../assets/256x256.PNG';
+import image3 from '../assets/500x500.PNG';
+
 import Worker from './index.worker.js';
 const worker = new Worker();
 
