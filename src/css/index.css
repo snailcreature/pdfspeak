@@ -12,8 +12,9 @@
   max-width: 80em;
 }
 
-input[type=button] {
-
+#play, #pause, #stop {
+  width: 20em;
+  height: 2em;
 }
 
 @media screen and (max-width: 80em) {
@@ -23,7 +24,8 @@ input[type=button] {
     resize: none;
   }
 
-  #controls {
-    max-width: 90vw;
+  #play, #pause, #stop {
+    width: 30vw;
+    height: 2em;
   }
 }
