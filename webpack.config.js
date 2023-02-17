@@ -17,23 +17,17 @@ module.exports = {
       template: "./src/index.html",
     }),
     new MiniCssExtractPlugin({
-      filename: "css/[name].[contenthash].css",
+      filename: "css/[name].css",
     }),
     new CopyPlugin({
       patterns: [
         './src/manifest.json',
+        './src/sw.js',
       ],
     }),
   ],
   output: {
-    filename: (pathData) => {
-      if (pathData.chunk.name === 'index') {
-        if (!hash) hash = pathData.chunk.contentHash.javascript;
-        console.log(pathData.chunk.contentHash.javascript);
-        return `javascript/[name].${hash}.js`
-      } 
-      return 'javascript/[name].[contenthash].js'
-    },
+    filename: 'javascript/[name].js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
     publicPath: '/',
@@ -63,13 +57,7 @@ module.exports = {
         loader: 'worker-loader',
         enforce: 'post',
         options: {
-          filename: (pathData) => {
-            if (hash) return `javascript/index.${hash}.worker.js`;
-            else {
-              hash = pathData.chunk.contentHash.javascript;
-              return 'javascript/index.[contenthash].worker.js'
-            }
-          }
+          filename: 'javascript/[name].js',
         }
       },
       {
