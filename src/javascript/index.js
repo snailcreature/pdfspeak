@@ -23,22 +23,24 @@ pdfReadBttn.addEventListener('click', () => {
       // Get the pages of the file
       let pageTrack = [...Array(pdf.numPages).keys()].map((value) => {return value + 1});
       console.log({pageTrack});
-      pageTrack.forEach((i) => {
-        pdf.getPage(i).then((page) => {
-          page.getTextContent().then((text) => {
-            text.items.forEach((line) => {
-              if (line.str) {
-                pdfEditTxtBx.value += line.str + ' ';
-              }
-              else {
-                pdfEditTxtBx.value += '\n\n';
-              }
+      for (let i = 1; i < pdf.numPages; i++) {
+        setTimeout(() => {
+          pdf.getPage(i).then((page) => {
+            page.getTextContent().then((text) => {
+              text.items.forEach((line) => {
+                if (line.str) {
+                  pdfEditTxtBx.value += line.str + ' ';
+                }
+                else {
+                  pdfEditTxtBx.value += '\n\n';
+                }
+              });
+              pdfEditTxtBx.value += '\n\n';
             });
-            pdfEditTxtBx.value += '\n\n';
+            page.cleanup();
           });
-          page.cleanup();
-        });
-      });
+        }, 1000*i); 
+      };
       console.log('loaded');
     });
   } else {
