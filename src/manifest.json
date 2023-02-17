@@ -1,0 +1,9 @@
+{
+  "name": "PDFSpeak",
+  "short_name": "PDFSpeak",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "A readable Hacker News app.",
+  "scope": "/"
+}

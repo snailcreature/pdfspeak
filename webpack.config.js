@@ -2,6 +2,8 @@ const path = require('path');
 const env = require('dotenv').config();
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 let hash = (new Date()).getTime();
 
@@ -18,9 +20,14 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "css/[name].[contenthash].css",
     }),
+    new CopyPlugin({
+      patterns: [
+        './src/manifest.json',
+      ],
+    }),
   ],
   output: {
-    filename: (pathData, assetInfo) => {
+    filename: (pathData) => {
       if (pathData.chunk.name === 'index') {
         if (!hash) hash = pathData.chunk.contentHash.javascript;
         console.log(pathData.chunk.contentHash.javascript);

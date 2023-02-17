@@ -3,18 +3,24 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Boilerplate</title>
-  <script defer src="/javascript/runtime.90f41b7cae5ad96bc32f.js"></script><script defer src="/javascript/vendors.24a9074e3b211355ec20.js"></script><script defer src="/javascript/index.1676653270454.js"></script><link href="/css/index.eb19d5ff177736b968d2.css" rel="stylesheet"></head>
+  <script defer src="/javascript/runtime.90f41b7cae5ad96bc32f.js"></script><script defer src="/javascript/vendors.24a9074e3b211355ec20.js"></script><script defer src="/javascript/index.1676667408028.js"></script><link href="/css/index.2fc6f7685e59172c3711.css" rel="stylesheet"></head>
   <body>
     <p>Upload a PDF to begin.</p>
 
-    <ul id="voice-list"></ul>
-
-    <label for="pdf-upload">Upload PDF</label>
-    <input type="file" name="Upload PDF" id="pdf-upload" accept=".pdf">
-    <input type="button" id="pdf-read" value="Open PDF">
+    <div id="upload">
+      <label for="pdf-upload">Upload PDF</label>
+      <input type="file" name="Upload PDF" id="pdf-upload" accept=".pdf">
+      <input type="button" id="pdf-read" value="Open PDF">
+    </div>
 
     <textarea name="Edit Text" id="edit-text" cols="80" rows="30"></textarea>
-    <input type="button" id="read-aloud" value="Read">
+
+    <div id="controls">
+      <input type="button" id="play" value="Play">
+      <input type="button" id="pause" value="Pause">
+      <input type="button" id="stop" value="Stop">
+    </div>
   </body>
 </html>
