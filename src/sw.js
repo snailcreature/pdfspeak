@@ -1,16 +1,16 @@
 const cacheName = "pdfspeaksw-v1.1";
 const appShellFiles = [
-  "./",
-  "./index.html",
-  "./css",
-  "./css/index.css",
-  "./javascript",
-  "./javascript/index.js",
-  "./javascript/index.worker.js",
-  "./assets",
-  "./assets/128x128.PNG",
-  "./assets/256x256.PNG",
-  "./assets/500x500.PNG",
+  "/",
+  "/index.html",
+  "/css",
+  "/css/index.css",
+  "/javascript",
+  "/javascript/index.js",
+  "/javascript/index.worker.js",
+  "/assets",
+  "/assets/128x128.PNG",
+  "/assets/256x256.PNG",
+  "/assets/500x500.PNG",
 ];
 
 self.addEventListener('install', (e) => {
