@@ -1,15 +1,16 @@
-const cacheName = "pdfspeak-v1";
+const cacheName = "pdfspeaksw-v1.1";
 const appShellFiles = [
-  "/index.html",
-  "/css",
-  "/css/index.css",
-  "/javascript",
-  "/javascript/index.js",
-  "/javascript/index.worker.js",
-  "/assets",
-  "/assets/128x128.PNG",
-  "/assets/256x256.PNG",
-  "/assets/500x500.PNG",
+  "./",
+  "./index.html",
+  "./css",
+  "./css/index.css",
+  "./javascript",
+  "./javascript/index.js",
+  "./javascript/index.worker.js",
+  "./assets",
+  "./assets/128x128.PNG",
+  "./assets/256x256.PNG",
+  "./assets/500x500.PNG",
 ];
 
 self.addEventListener('install', (e) => {
@@ -21,6 +22,7 @@ self.addEventListener('install', (e) => {
       await cache.addAll(contentToCache);
     })()
   );
+  alert('[Service Worker] installed');
 });
 
 self.addEventListener("fetch", (e) => {
@@ -37,20 +39,5 @@ self.addEventListener("fetch", (e) => {
       cache.put(e.request, response.clone());
       return response;
     })()
-  );
-});
-
-self.addEventListener("activate", (e) => {
-  e.waitUntil(
-    caches.keys().then((keyList) => {
-      return Promise.all(
-        keyList.map((key) => {
-          if (key === cacheName) {
-            return;
-          }
-          return caches.delete(key);
-        })
-      );
-    })
   );
 });
