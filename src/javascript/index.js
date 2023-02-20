@@ -5,7 +5,7 @@ import image2 from '../assets/256x256.PNG';
 import image3 from '../assets/500x500.PNG';
 
 import Worker from './index.worker.js';
-const worker = new Worker();
+import async from 'async';
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("../sw.js");
@@ -27,8 +27,6 @@ function getPortionToRead() {
   let text = pdfEditTxtBx.value;
   let cursorPos = pdfEditTxtBx.selectionStart;
   let cursorEndPos = pdfEditTxtBx.selectionEnd;
-  console.log({cursorPos});
-  console.log(text.length);
   if (cursorPos == text.length) return text;
   else if (cursorPos === cursorEndPos) return text.slice(cursorPos);
   else if (cursorEndPos > text.length) return text.slice(cursorPos);
@@ -46,27 +44,56 @@ pdfReadBttn.addEventListener('click', () => {
     // Load the file
     let loadingTask = getDocument(URL.createObjectURL(file));
     loadingTask.promise.then((pdf) => {
+      let pages = Array.from({
+        length: pdf.numPages,
+      }, (_, index) => index+1);
+
       // Get the pages of the file
-      let pageTrack = [...Array(pdf.numPages).keys()].map((value) => {return value + 1});
-      console.log({pageTrack});
-      for (let i = 1; i < pdf.numPages; i++) {
-        setTimeout(() => {
-          pdf.getPage(i).then((page) => {
-            page.getTextContent().then((text) => {
-              text.items.forEach((line) => {
-                if (line.str) {
-                  pdfEditTxtBx.value += line.str + ' ';
-                }
-                else {
-                  pdfEditTxtBx.value += '\n\n';
-                }
-              });
-              pdfEditTxtBx.value += '\n\n';
-            });
-            page.cleanup();
+      const getPage = async (index) => {
+        return pdf.getPage(index).then((res) => {return res})
+      }
+
+      const getText = async (page) => {
+        return page.value.getTextContent()//.then((text) => {return text});
+      }
+
+      const convertToString = async (text) => {
+        let out = '';
+        text.value.items.forEach((line) => {
+          if (line.str) {
+            out += line.str + ' ';
+          }
+          else {
+            out += '\n\n';
+          }
+        });
+        return out;
+      }
+
+      async.mapSeries(pages, async.reflect(getPage), (_, res) => {
+        async.mapSeries(res, async.reflect(getText), (_, res) => {
+          async.mapSeries(res, async.reflect(convertToString), (_, res) => {
+            pdfEditTxtBx.value = res.map((value) => {return value.value}).join('\n\n');
           });
-        }, 1000*i); 
-      };
+        });
+      });
+
+      // for (let i = 1; i < pdf.numPages; i++) {
+      //     pdf.getPage(i).then((page) => {
+      //       page.getTextContent().then((text) => {
+      //         text.items.forEach((line) => {
+      //           if (line.str) {
+      //             pdfEditTxtBx.value += line.str + ' ';
+      //           }
+      //           else {
+      //             pdfEditTxtBx.value += '\n\n';
+      //           }
+      //         });
+      //         pdfEditTxtBx.value += '\n\n';
+      //       });
+      //       page.cleanup();
+      //     });
+      // };
       console.log('loaded');
     });
   } else {
