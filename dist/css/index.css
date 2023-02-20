@@ -3,13 +3,13 @@
   \*********************************************************************/
 :root {
   --main-bg-color: #F4F4f4;
-  --main-text-color: #191923;
+  --main-text-color: #191919;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --main-bg-color: #2C1320;
-    --main-text-color: #F9F9F9;
+    --main-bg-color: #2C2C2C;
+    --main-text-color: #F4F4F4;
   }
 }
 
