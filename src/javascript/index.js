@@ -22,6 +22,21 @@ const playBttn = document.querySelector('#play');
 const pauseBttn = document.querySelector('#pause');
 const stopBttn = document.querySelector('#stop');
 
+
+function getPortionToRead() {
+  let text = pdfEditTxtBx.value;
+  let cursorPos = pdfEditTxtBx.selectionStart;
+  let cursorEndPos = pdfEditTxtBx.selectionEnd;
+  console.log({cursorPos});
+  console.log(text.length);
+  if (cursorPos == text.length) return text;
+  else if (cursorPos === cursorEndPos) return text.slice(cursorPos);
+  else if (cursorEndPos > text.length) return text.slice(cursorPos);
+  else if (cursorEndPos < text.length) return text.slice(cursorPos, cursorEndPos+1);
+  return text;
+}
+
+
 pdfReadBttn.addEventListener('click', () => {
   let file;
   pdfEditTxtBx.value = '';
@@ -61,7 +76,7 @@ pdfReadBttn.addEventListener('click', () => {
 
 playBttn.addEventListener('click', () => {
   if (speechSynthesis.paused) speechSynthesis.resume();
-  else speechSynthesis.speak(new SpeechSynthesisUtterance(pdfEditTxtBx.value));
+  else speechSynthesis.speak(new SpeechSynthesisUtterance(getPortionToRead()));
 });
 
 pauseBttn.addEventListener('click', () => {
