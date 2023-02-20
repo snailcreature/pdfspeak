@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#fff",
+  "background_color": "#2C2C2C",
   "description": "A readable Hacker News app.",
   "scope": "/",
   "icons": [
