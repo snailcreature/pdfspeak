@@ -67,6 +67,15 @@ input[type="range"] {
   margin: 0;
 }
 
+#links {
+  list-style-type: none;
+}
+
+#links li {
+  display: inline-block;
+  padding: 0 0.5rem;
+}
+
 @media screen and (max-width: 80em) {
   body {
     align-content: center;
