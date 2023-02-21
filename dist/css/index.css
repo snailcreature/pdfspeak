@@ -44,10 +44,27 @@ input[type=button] {
   max-width: 80em;
 }
 
-#play, #pause, #stop {
-  width: 20em;
+#play, #pause, #stop, #options {
+  width: 15em;
   height: 2em;
   cursor: pointer;
+}
+
+dialog > * {
+  padding-bottom: 1em;
+}
+
+datalist {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  writing-mode: vertical-lr;
+  width: 30vw;
+}
+
+input[type="range"] {
+  width: 30vw;
+  margin: 0;
 }
 
 @media screen and (max-width: 80em) {
@@ -65,8 +82,8 @@ input[type=button] {
     min-width: 90vw;
   }
 
-  #play, #pause, #stop {
-    width: 30vw;
+  #play, #pause, #stop, #options {
+    width: 22vw;
     cursor: pointer;
   }
 }
