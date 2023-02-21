@@ -1,11 +1,11 @@
 {
   "name": "PDFSpeak",
   "short_name": "PDFSpeak",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#2C2C2C",
-  "description": "A readable Hacker News app.",
+  "background_color": "#FFDE59",
+  "description": "An app for reading PDFs back to you.",
   "scope": "/",
   "icons": [
     {
@@ -47,8 +47,9 @@
     }
   ],
   "serviceworker": {
-    "scope": "/",
+    "scope": "./",
     "src": "./sw.js",
     "use_cache": true
-  }
+  },
+  "orientation": "portrait"
 }
