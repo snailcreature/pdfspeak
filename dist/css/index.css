@@ -21,7 +21,6 @@
 
 input[type=file] {
   max-width: 40em;
-  height: 5vh;
   border-color: black;
   border: .1em;
   border-style: solid;
@@ -35,6 +34,7 @@ input[type=button] {
 }
 
 #edit-text {
+  margin-top: .5em;
   max-width: 80em;
   max-height: 80vh;
   resize: none;
@@ -46,6 +46,13 @@ input[type=button] {
 
 #play, #pause, #stop, #options {
   width: 15em;
+  height: 2em;
+  cursor: pointer;
+  margin-bottom: .5em;
+}
+
+#start-bookmark, #bookmark {
+  width: 30.4em;
   height: 2em;
   cursor: pointer;
 }
@@ -73,7 +80,7 @@ input[type="range"] {
 
 #links li {
   display: inline-block;
-  padding: 0 0.5rem;
+  padding-right: 0.5rem;
 }
 
 @media screen and (max-width: 80em) {
@@ -86,13 +93,25 @@ input[type="range"] {
     max-height: 80vh;
     resize: none;
   }
+}
+
+@media screen and (max-width: 40em) {
+  input[type=file] {
+    width: 92vw;
+  }
 
   #pdf-read {
-    min-width: 90vw;
+    width: 92vw;
   }
 
   #play, #pause, #stop, #options {
     width: 22vw;
+    cursor: pointer;
+  }
+
+  #start-bookmark, #bookmark {
+    width: 44vw;
+    height: 2em;
     cursor: pointer;
   }
 }

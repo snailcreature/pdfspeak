@@ -33,6 +33,8 @@ const playBttn = document.querySelector('#play');
 const pauseBttn = document.querySelector('#pause');
 const stopBttn = document.querySelector('#stop');
 const optionsBttn = document.querySelector('#options');
+const startBkmkBttn = document.querySelector('#start-bookmark');
+const bookmarkBttn = document.querySelector('#bookmark');
 
 const optionsDlg = document.querySelector('#options-dialog');
 const voiceSlct = document.querySelector('#voice-control');
@@ -153,6 +155,27 @@ pauseBttn.addEventListener('click', () => {
  */
 stopBttn.addEventListener('click', () => {
   speechSynthesis.cancel();
+});
+
+let charIndex = 0;
+
+utterance.addEventListener('boundary', (event) => {
+  charIndex = event.charIndex;
+});
+
+utterance.addEventListener('end', () => {
+  charIndex = 0;
+});
+
+startBkmkBttn.addEventListener('click', () => {
+  if (localStorage.getItem('bookmark')) {
+    pdfEditTxtBx.selectionStart = parseInt(localStorage.getItem('bookmark'));
+    playBttn.dispatchEvent(new MouseEvent('click'));
+  }
+})
+
+bookmarkBttn.addEventListener('click', () => {
+  if (speechSynthesis.pending) localStorage.setItem('bookmark', charIndex.toString());
 });
 
 speechSynthesis.speak(utterance);
