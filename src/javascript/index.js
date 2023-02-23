@@ -7,6 +7,8 @@ import image3 from '../assets/500x500.PNG';
 import Worker from './index.worker.js';
 import async from 'async';
 
+import { compressToUTF16, decompressFromUTF16 } from 'lz-string';
+
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("../sw.js");
   console.log('[Service Worker] registered');
@@ -17,7 +19,7 @@ import { getDocument } from 'pdfjs-dist';
 let voices = speechSynthesis.getVoices().filter((value) => {if (value.localService) return value});
 if (voices.length == 0) location.reload();
 
-if (typeof localStorage.getItem('voice') == null) {
+if (!localStorage.getItem('voice')) {
   console.log(speechSynthesis.getVoices().filter(voice => voice.default)[0].name)
   localStorage.setItem('voice', speechSynthesis.getVoices().filter(voice => voice.default)[0].name);
   localStorage.setItem('rate', '1.0');
@@ -95,17 +97,34 @@ pdfReadBttn.addEventListener('click', () => {
         async.mapSeries(res, async.reflect(getText), (_, res) => {
           async.mapSeries(res, async.reflect(convertToString), (_, res) => {
             pdfEditTxtBx.value = res.map((value) => {return value.value}).join('\n\n');
+            // Try to save the file text
+            try {
+              localStorage.setItem('file', compressToUTF16(pdfEditTxtBx.value));
+              console.log('file saved');
+            } catch (error) {
+              console.warn(error);
+            }
           });
         });
       });
       console.log('loaded');
+
     });
   } else {
     console.log('No file');
   }
 });
 
-
+// Attempt to load saved pdf text if it exists
+if (localStorage.getItem('file')) {
+  try {
+    pdfEditTxtBx.value = decompressFromUTF16(localStorage.getItem('file'));
+  } catch (error) {
+    console.warn(error);
+  }
+} else {
+  console.log('no file saved');
+}
 
 let utterance = new SpeechSynthesisUtterance("Upload a PDF to begin.");
 utterance.voice = voices.filter(voice => voice.name == localStorage.getItem('voice'))[0];
