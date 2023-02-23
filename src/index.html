@@ -21,21 +21,24 @@
     <meta property="og:image" content="https://pdfspeak.snail.codes/assets/500x500.PNG">
   </head>
   <body>
-    <p>Upload a PDF to begin.</p>
 
     <div id="upload">
       <label for="pdf-upload">Upload PDF</label>
       <input type="file" name="Upload PDF" id="pdf-upload" accept=".pdf">
-      <input type="button" id="pdf-read" value="Open PDF">
+      <input type="button" id="pdf-read" value="Open PDF" disabled>
     </div>
 
     <textarea name="Edit Text" id="edit-text" cols="80" rows="30" placeholder="Upload a PDF and click Open PDF to begin. Press Play to read the entire document, or use the cursor to choose a starting position or selection to read."></textarea>
 
     <div id="controls">
-      <input type="button" id="play" value="Play">
-      <input type="button" id="pause" value="Pause">
-      <input type="button" id="stop" value="Stop">
+      <input type="button" id="play" value="Play" disabled>
+      <input type="button" id="pause" value="Pause" disabled>
+      <input type="button" id="stop" value="Stop" disabled>
       <input type="button" id="options" value="Options">
+    </div>
+    <div id="bookmark-control">
+      <input type="button" id="start-bookmark" value="Start from Bookmark" disabled>
+      <input type="button" id="bookmark" value="Bookmark Place" disabled>
     </div>
 
     <dialog id="options-dialog">
@@ -66,7 +69,7 @@
 
     <footer>
       <ul id="links">
-        <li><a href="https://www.snail.codes">Portfolio Website</a></li>
+        <li><a href="https://www.snail.codes">Portfolio</a></li>
         <li><a href="https://twitter.com/SnailCreature">Twitter</a></li>
         <li><a href="https://snailcreature.itch.io/">Itch Store</a></li>
       </ul>

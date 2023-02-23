@@ -7,6 +7,8 @@ import image3 from '../assets/500x500.PNG';
 import Worker from './index.worker.js';
 import async from 'async';
 
+import { compressToUTF16, decompressFromUTF16 } from 'lz-string';
+
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("../sw.js");
   console.log('[Service Worker] registered');
@@ -17,7 +19,7 @@ import { getDocument } from 'pdfjs-dist';
 let voices = speechSynthesis.getVoices().filter((value) => {if (value.localService) return value});
 if (voices.length == 0) location.reload();
 
-if (typeof localStorage.getItem('voice') == null) {
+if (!localStorage.getItem('voice')) {
   console.log(speechSynthesis.getVoices().filter(voice => voice.default)[0].name)
   localStorage.setItem('voice', speechSynthesis.getVoices().filter(voice => voice.default)[0].name);
   localStorage.setItem('rate', '1.0');
@@ -31,12 +33,18 @@ const playBttn = document.querySelector('#play');
 const pauseBttn = document.querySelector('#pause');
 const stopBttn = document.querySelector('#stop');
 const optionsBttn = document.querySelector('#options');
+const startBkmkBttn = document.querySelector('#start-bookmark');
+const bookmarkBttn = document.querySelector('#bookmark');
 
 const optionsDlg = document.querySelector('#options-dialog');
 const voiceSlct = document.querySelector('#voice-control');
 const speedRng = document.querySelector('#speed-control');
 const testBttn = document.querySelector('#test-voice');
 const saveCloseBttn = document.querySelector('#save-close');
+
+pdfUploadIpt.addEventListener('change', () => {
+  pdfReadBttn.removeAttribute('disabled');
+});
 
 /**
  * Gets the text to read based on the cursor position.
@@ -95,17 +103,40 @@ pdfReadBttn.addEventListener('click', () => {
         async.mapSeries(res, async.reflect(getText), (_, res) => {
           async.mapSeries(res, async.reflect(convertToString), (_, res) => {
             pdfEditTxtBx.value = res.map((value) => {return value.value}).join('\n\n');
+            // Try to save the file text
+            try {
+              localStorage.setItem('file', compressToUTF16(pdfEditTxtBx.value));
+              console.log('file saved');
+            } catch (error) {
+              console.warn(error);
+            }
+            playBttn.removeAttribute('disabled');
+            bookmarkBttn.removeAttribute('disabled');
+            if (localStorage.getItem('bookmark')) startBkmkBttn.removeAttribute('disabled');
           });
         });
       });
       console.log('loaded');
+
     });
   } else {
     console.log('No file');
   }
 });
 
-
+// Attempt to load saved pdf text if it exists
+if (localStorage.getItem('file')) {
+  try {
+    pdfEditTxtBx.value = decompressFromUTF16(localStorage.getItem('file'));
+    playBttn.removeAttribute('disabled');
+    if (localStorage.getItem('bookmark')) startBkmkBttn.removeAttribute('disabled');
+    bookmarkBttn.removeAttribute('disabled');
+  } catch (error) {
+    console.warn(error);
+  }
+} else {
+  console.log('no file saved');
+}
 
 let utterance = new SpeechSynthesisUtterance("Upload a PDF to begin.");
 utterance.voice = voices.filter(voice => voice.name == localStorage.getItem('voice'))[0];
@@ -120,13 +151,26 @@ playBttn.addEventListener('click', () => {
     utterance.text = getPortionToRead();
     speechSynthesis.speak(utterance);
   }
+  playBttn.setAttribute('disabled', '');
+  optionsBttn.setAttribute('disabled', '');
+  pauseBttn.removeAttribute('disabled');
+  stopBttn.removeAttribute('disabled');
+  startBkmkBttn.setAttribute('disabled', '');
+  bookmarkBttn.setAttribute('disabled', '');
 });
 
 /**
  * Event listener to pause the speech
  */
 pauseBttn.addEventListener('click', () => {
-  if (speechSynthesis.speaking) speechSynthesis.pause();
+  if (speechSynthesis.speaking) {
+    speechSynthesis.pause();
+    pauseBttn.setAttribute('disabled', '');
+    playBttn.removeAttribute('disabled');
+    optionsBttn.removeAttribute('disabled');
+    startBkmkBttn.removeAttribute('disabled');
+    bookmarkBttn.removeAttribute('disabled');
+  }
 });
 
 /**
@@ -134,6 +178,36 @@ pauseBttn.addEventListener('click', () => {
  */
 stopBttn.addEventListener('click', () => {
   speechSynthesis.cancel();
+  stopBttn.setAttribute('disabled', '');
+  pauseBttn.setAttribute('disabled', '');
+  playBttn.removeAttribute('disabled');
+  optionsBttn.removeAttribute('disabled');
+  startBkmkBttn.removeAttribute('disabled');
+  bookmarkBttn.setAttribute('disabled', '');
+});
+
+let charIndex = 0;
+
+utterance.addEventListener('boundary', (event) => {
+  charIndex = event.charIndex;
+});
+
+utterance.addEventListener('end', () => {
+  charIndex = 0;
+});
+
+startBkmkBttn.addEventListener('click', () => {
+  if (localStorage.getItem('bookmark')) {
+    let bkmkPos = parseInt(localStorage.getItem('bookmark'));
+    pdfEditTxtBx.selectionStart = bkmkPos < pdfEditTxtBx.value.length-1 ? bkmkPos : 0;
+    playBttn.dispatchEvent(new MouseEvent('click'));
+  }
+});
+
+bookmarkBttn.addEventListener('click', () => {
+  if (speechSynthesis.pending) localStorage.setItem('bookmark', charIndex.toString());
+  else if (pdfEditTxtBx.selectionStart < pdfEditTxtBx.value.length-1) localStorage.setItem('bookmark', pdfEditTxtBx.selectionEnd.toString());
+  else localStorage.setItem('bookmark', '0');
 });
 
 speechSynthesis.speak(utterance);
@@ -157,6 +231,7 @@ saveCloseBttn.addEventListener('click', () => {
   optionsDlg.close();
 });
 
+voiceSlct.innerHTML = '';
 voices.forEach((voice, index) => {
   let opt = document.createElement('option');
   opt.textContent = voice.name;
