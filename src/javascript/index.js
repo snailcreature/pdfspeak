@@ -42,6 +42,10 @@ const speedRng = document.querySelector('#speed-control');
 const testBttn = document.querySelector('#test-voice');
 const saveCloseBttn = document.querySelector('#save-close');
 
+pdfUploadIpt.addEventListener('change', () => {
+  pdfReadBttn.removeAttribute('disabled');
+});
+
 /**
  * Gets the text to read based on the cursor position.
  * @returns {string} - The string of text to read
@@ -106,6 +110,9 @@ pdfReadBttn.addEventListener('click', () => {
             } catch (error) {
               console.warn(error);
             }
+            playBttn.removeAttribute('disabled');
+            bookmarkBttn.removeAttribute('disabled');
+            if (localStorage.getItem('bookmark')) startBkmkBttn.removeAttribute('disabled');
           });
         });
       });
@@ -121,6 +128,9 @@ pdfReadBttn.addEventListener('click', () => {
 if (localStorage.getItem('file')) {
   try {
     pdfEditTxtBx.value = decompressFromUTF16(localStorage.getItem('file'));
+    playBttn.removeAttribute('disabled');
+    if (localStorage.getItem('bookmark')) startBkmkBttn.removeAttribute('disabled');
+    bookmarkBttn.removeAttribute('disabled');
   } catch (error) {
     console.warn(error);
   }
@@ -141,13 +151,26 @@ playBttn.addEventListener('click', () => {
     utterance.text = getPortionToRead();
     speechSynthesis.speak(utterance);
   }
+  playBttn.setAttribute('disabled', '');
+  optionsBttn.setAttribute('disabled', '');
+  pauseBttn.removeAttribute('disabled');
+  stopBttn.removeAttribute('disabled');
+  startBkmkBttn.setAttribute('disabled', '');
+  bookmarkBttn.setAttribute('disabled', '');
 });
 
 /**
  * Event listener to pause the speech
  */
 pauseBttn.addEventListener('click', () => {
-  if (speechSynthesis.speaking) speechSynthesis.pause();
+  if (speechSynthesis.speaking) {
+    speechSynthesis.pause();
+    pauseBttn.setAttribute('disabled', '');
+    playBttn.removeAttribute('disabled');
+    optionsBttn.removeAttribute('disabled');
+    startBkmkBttn.removeAttribute('disabled');
+    bookmarkBttn.removeAttribute('disabled');
+  }
 });
 
 /**
@@ -155,6 +178,12 @@ pauseBttn.addEventListener('click', () => {
  */
 stopBttn.addEventListener('click', () => {
   speechSynthesis.cancel();
+  stopBttn.setAttribute('disabled', '');
+  pauseBttn.setAttribute('disabled', '');
+  playBttn.removeAttribute('disabled');
+  optionsBttn.removeAttribute('disabled');
+  startBkmkBttn.removeAttribute('disabled');
+  bookmarkBttn.setAttribute('disabled', '');
 });
 
 let charIndex = 0;
@@ -169,13 +198,16 @@ utterance.addEventListener('end', () => {
 
 startBkmkBttn.addEventListener('click', () => {
   if (localStorage.getItem('bookmark')) {
-    pdfEditTxtBx.selectionStart = parseInt(localStorage.getItem('bookmark'));
+    let bkmkPos = parseInt(localStorage.getItem('bookmark'));
+    pdfEditTxtBx.selectionStart = bkmkPos < pdfEditTxtBx.value.length-1 ? bkmkPos : 0;
     playBttn.dispatchEvent(new MouseEvent('click'));
   }
-})
+});
 
 bookmarkBttn.addEventListener('click', () => {
   if (speechSynthesis.pending) localStorage.setItem('bookmark', charIndex.toString());
+  else if (pdfEditTxtBx.selectionStart < pdfEditTxtBx.value.length-1) localStorage.setItem('bookmark', pdfEditTxtBx.selectionEnd.toString());
+  else localStorage.setItem('bookmark', '0');
 });
 
 speechSynthesis.speak(utterance);
