@@ -157,6 +157,7 @@ saveCloseBttn.addEventListener('click', () => {
   optionsDlg.close();
 });
 
+voiceSlct.innerHTML = '';
 voices.forEach((voice, index) => {
   let opt = document.createElement('option');
   opt.textContent = voice.name;
